@@ -9,7 +9,7 @@ https://movie-recommender-5hx9zqbd92yfvrysrxguxx.streamlit.app
 Ingresás una película que te gustó y el modelo te recomienda 5 películas similares basándose en los patrones de rating de miles de usuarios, sin usar géneros ni metadatos — solo comportamiento de usuarios.
 
 ## Tecnologías
-- Python, Pandas, Scikit-learn, Scipy, Streamlit
+- Python, Pandas, Scikit-learn, Scipy, Streamlit, FastAPI
 - Algoritmo: KNN con similitud coseno
 
 ## Dataset
@@ -25,3 +25,42 @@ Se usó el dataset MovieLens con 1 millón de ratings de 6040 usuarios sobre 388
 3. Activar: `venv\Scripts\activate`
 4. Instalar dependencias: `pip install -r requirements.txt`
 5. Correr: `streamlit run src/app.py`
+
+## API REST
+
+El modelo también está disponible como API REST usando FastAPI.
+
+### Correr la API localmente
+
+uvicorn api.main:app --reload
+
+### Documentación interactiva
+
+Una vez corriendo, entrá a `http://127.0.0.1:8000/docs` para ver y probar todos los endpoints.
+
+### Endpoints
+
+- `GET /` — verifica que la API está funcionando
+- `POST /recomendar` — devuelve 5 películas recomendadas
+- `GET /buscar/{titulo}` — busca películas por nombre
+
+### Ejemplo de uso
+
+```python
+import requests
+
+response = requests.post("http://127.0.0.1:8000/recomendar", json={"pelicula": "Toy Story"})
+print(response.json())
+```
+
+### Respuesta
+
+```json
+{
+  "pelicula": "Toy Story",
+  "recomendaciones": [
+    {"titulo": "Toy Story 2 (1999)", "generos": "Animation|Children's|Comedy", "similitud": 94.3},
+    {"titulo": "Aladdin (1992)", "generos": "Animation|Children's|Comedy|Musical", "similitud": 89.1}
+  ]
+}
+```
